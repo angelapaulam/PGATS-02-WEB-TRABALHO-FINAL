@@ -6,7 +6,7 @@ describe('Home', () => {
         cy.contains('h2', 'All Products').should('be.visible')
     })
 
-    it.only('Test Case 8: Verify Subscription in home page', () => {
+    it('Test Case 8: Verify Subscription in home page', () => {
         cy.contains('.productinfo', 'Men Tshirt')
         .closest('.product-image-wrapper')
         .find('a[href*="/product_details/"]')

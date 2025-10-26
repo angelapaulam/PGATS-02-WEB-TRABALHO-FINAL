@@ -1,6 +1,6 @@
 describe('Automation Exercise - Casos 1 à 5 (CSS)', () => {
   beforeEach(() => {
-    cy.visit('https://automationexercise.com')
+    cy.visit('/')
     cy.contains('a', 'Signup / Login').click()
   })
 

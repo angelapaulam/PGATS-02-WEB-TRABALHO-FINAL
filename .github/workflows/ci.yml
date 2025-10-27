@@ -25,3 +25,17 @@ jobs:
 
     - name: Executar o Cypress
       run: npm test
+    
+    - name: Gerar relatório HTML unificado
+      run: |
+        npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged-report.json
+        npx marge cypress/reports/merged-report.json -f index -o cypress/reports
+
+    - name: Upload dos relatórios
+      uses: actions/upload-artifact@v4
+      with:
+        name: relatorios
+        path: |
+          cypress/reports
+          cypress/screenshots
+          cypress/videos

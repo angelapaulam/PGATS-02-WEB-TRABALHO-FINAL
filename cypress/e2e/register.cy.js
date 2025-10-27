@@ -1,13 +1,16 @@
+import dadosRegistro from '../fixtures/registro/dadosRegistro.json' 
+import Cadastro from '../support/helpers/Cadastro'  
+
 describe('Automation Exercise - Casos 1 à 5 (CSS)', () => {
   beforeEach(() => {
     cy.visit('/')
     cy.contains('a', 'Signup / Login').click()
+    cy.contains('h2', 'New User Signup!').should('be.visible')
   })
 
   it('Test Case 1: Register User', () => {
     let randomUserComplement = new Date().getTime()
 
-    cy.contains('h2', 'New User Signup!').should('be.visible')
     cy.get('[data-qa=signup-name]').type(`Cypress_${randomUserComplement}`)
     cy.get('[data-qa=signup-email]').type(`cypress${randomUserComplement}@test.com`)
     cy.contains('button', 'Signup').click()
@@ -31,12 +34,9 @@ describe('Automation Exercise - Casos 1 à 5 (CSS)', () => {
   })
 
   it('Test Case 5: Register User with existing email', () => {
-    cy.contains('h2', 'New User Signup!').should('be.visible')
-    cy.get('[data-qa=signup-name]').type('pgats-user777')
-    cy.get('[data-qa=signup-email]').type('pgats-user@email.com')
-    cy.contains('button', 'Signup').click()
-
+    Cadastro.preencherFormularioDeCadastro(dadosRegistro.Usuario.username, dadosRegistro.Usuario.email)
     cy.contains('Email Address already exist!').should('be.visible')
+    
   })
 
 })

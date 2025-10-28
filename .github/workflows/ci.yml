@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
+    - name: Checkout do código
       uses: actions/checkout@v4
 
     - name: Instalar NodeJS
@@ -23,14 +23,30 @@ jobs:
     - name: Instalar dependências do projeto
       run: npm install
 
-    - name: Executar o Cypress
-      run: npm test
-    
-    - name: Gerar relatório HTML unificado
+    - name: Limpar relatórios antigos
       run: |
         mkdir -p cypress/reports
-        npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged-report.json
-        npx marge cypress/reports/merged-report.json -f index -o cypress/reports
+        rm -f cypress/reports/*.json
+        rm -f cypress/reports/*.html
+
+    - name: Executar testes com geração de relatórios
+      run: npm run test:report
+
+    - name: Mesclar relatórios JSON
+      run: |
+        if [ -n "$(ls -A cypress/reports/*.json 2>/dev/null)" ]; then
+          npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged-report.json
+        else
+          echo "Nenhum relatório JSON encontrado, pulando merge."
+        fi
+
+    - name: Gerar relatório HTML unificado
+      run: |
+        if [ -f cypress/reports/merged-report.json ]; then
+          npx marge cypress/reports/merged-report.json --reportDir cypress/reports --inline
+        else
+          echo "Arquivo merged-report.json não encontrado, pulando geração de HTML."
+        fi
 
     - name: Upload dos relatórios
       uses: actions/upload-artifact@v4

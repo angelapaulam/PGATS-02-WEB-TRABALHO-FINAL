@@ -5,7 +5,7 @@ describe('Automation Exercise - Place Order', () => {
     cy.contains('a', 'Signup / Login').click()
   })
 
-  it('Deve registrar, adicionar produto ao carrinho e finalizar pedido', () => {
+  it.only('Test Case 15: Place Order: Register before Checkout', () => {
     const randomUserComplement = new Date().getTime()
     const username = `Cypress_${randomUserComplement}`
     const email = `cypress${randomUserComplement}@test.com`

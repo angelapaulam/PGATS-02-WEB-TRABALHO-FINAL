@@ -5,7 +5,7 @@ describe('Home', () => {
         cy.visit('/')
     })
 
-    it.only('Test Case 10: Verify Subscription in home page', () => {
+    it('Test Case 10: Verify Subscription in home page', () => {
         const email = faker.internet.email()
 
         cy.get('input#susbscribe_email').type(email)

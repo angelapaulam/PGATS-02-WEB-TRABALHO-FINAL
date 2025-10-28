@@ -1,58 +1,45 @@
 name: Integração Contínua
 
 on:
-  workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+  workflow_dispatch:
 
 jobs:
-  test:
+  cypress-tests:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout do código
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Instalar NodeJS
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
 
-    - name: Instalar dependências do projeto
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Limpar relatórios antigos
-      run: |
-        mkdir -p cypress/reports
-        rm -f cypress/reports/*.json
-        rm -f cypress/reports/*.html
+      - name: Clean reports
+        run: npm run clean:reports
 
-    - name: Executar testes com geração de relatórios
-      run: npm run test:report
+      - name: Run tests with reports
+        run: npm run test:report
 
-    - name: Mesclar relatórios JSON
-      run: |
-        if [ -n "$(ls -A cypress/reports/*.json 2>/dev/null)" ]; then
-          npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged-report.json
-        else
-          echo "Nenhum relatório JSON encontrado, pulando merge."
-        fi
+      - name: Merge reports
+        run: npm run merge:reports
 
-    - name: Gerar relatório HTML unificado
-      run: |
-        if [ -f cypress/reports/merged-report.json ]; then
-          npx marge cypress/reports/merged-report.json --reportDir cypress/reports --inline
-        else
-          echo "Arquivo merged-report.json não encontrado, pulando geração de HTML."
-        fi
+      - name: Generate HTML report
+        run: npm run generate-html
 
-    - name: Upload dos relatórios
-      uses: actions/upload-artifact@v4
-      with:
-        name: relatorios
-        path: |
-          cypress/reports
-          cypress/screenshots
-          cypress/videos
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorios
+          path: |
+            cypress/reports
+            cypress/screenshots
+            cypress/videos

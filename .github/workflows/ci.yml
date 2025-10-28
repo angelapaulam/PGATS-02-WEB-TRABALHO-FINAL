@@ -28,6 +28,7 @@ jobs:
     
     - name: Gerar relatório HTML unificado
       run: |
+        mkdir -p cypress/reports
         npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged-report.json
         npx marge cypress/reports/merged-report.json -f index -o cypress/reports
 
